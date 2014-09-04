@@ -3,11 +3,17 @@ import os, sys, time
 from collections import defaultdict
 from optparse import OptionParser
 
-from hashmapd.trigrams import Trigram, debug, text_to_trigrams, MODES
-from hashmapd.trigrams import TRIGRAM_OFFSET_FACTOR, ANTI_TRIGRAM_OFFSET_FACTOR
+from trigrams import Trigram, debug, text_to_trigrams, MODES, open_maybe_gzip
+from trigrams import TRIGRAM_OFFSET_FACTOR, ANTI_TRIGRAM_OFFSET_FACTOR
 
+def find_git_root():
+    p = Popen(["git", "rev-parse", "--show-toplevel"], stdout=PIPE)
+    root = p.communicate()[0].strip()
+    if p.returncode:
+        raise SystemExit("This does not seem to be a git repository (git returned %s)" %
+                         p.returncode)
+    return root
 
-from hashmapd.common import find_git_root, open_maybe_gzip
 BASE_DIR = find_git_root()
 
 RAW_CORPI_DIR = os.path.join(BASE_DIR, "corpora/raw/")
