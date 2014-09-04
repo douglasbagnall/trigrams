@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, os
 import json
+import re
 import gzip
 from math import log
 from collections import defaultdict
@@ -20,7 +21,17 @@ ANTI_TRIGRAM_OFFSET_FACTOR = 1.0
 #
 # NB: not all rows have the id field.
 
-import re
+def open_maybe_gzip(filename, mode='rb'):
+    if filename.endswith('.gz'):
+        return gzip.open(filename, mode)
+    else:
+        return open(filename, mode)
+
+def debug(*args):
+    for x in args:
+        print >> sys.stderr, x,
+    print >> sys.stderr
+
 
 #ignore numbers, perhaps with dollar signs, or decimal points
 _number_re = re.compile(r'^-?\$?\d+\.?\d*$')
